@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_HOME = tool "Sonar"     // your SonarQube Scanner installation name
+        SONAR_HOME = tool "Sonar"     // SonarQube Scanner tool name in Jenkins
     }
 
     parameters {
@@ -31,7 +31,6 @@ pipeline {
         stage("Git: Checkout Code") {
             steps {
                 script {
-                    // your function: code_checkout.groovy
                     code_checkout("https://github.com/sajidshaikh-01/Wanderlust-Mega-Project.git", "main")
                 }
             }
@@ -48,7 +47,6 @@ pipeline {
         stage("OWASP: Dependency Check") {
             steps {
                 script {
-                    // your function already uses odcInstallation: 'OWASP'
                     owasp_dependency()
                 }
             }
@@ -57,8 +55,6 @@ pipeline {
         stage("SonarQube: Code Analysis") {
             steps {
                 script {
-                    // you set SonarQube installation name = "Sonar"
-                    // function params: (SonarQubeAPI, Projectname, ProjectKey)
                     sonarqube_analysis("Sonar", "wanderlust", "wanderlust")
                 }
             }
@@ -96,11 +92,11 @@ pipeline {
             steps {
                 script {
                     dir('backend') {
-                        docker_build("wanderlust-backend-beta", "${params.BACKEND_DOCKER_TAG}", "trainwithshubham")
+                        docker_build("wanderlust-backend-beta", "${params.BACKEND_DOCKER_TAG}", "sajid0100")
                     }
 
                     dir('frontend') {
-                        docker_build("wanderlust-frontend-beta", "${params.FRONTEND_DOCKER_TAG}", "trainwithshubham")
+                        docker_build("wanderlust-frontend-beta", "${params.FRONTEND_DOCKER_TAG}", "sajid0100")
                     }
                 }
             }
@@ -109,8 +105,8 @@ pipeline {
         stage("Docker: Push to DockerHub") {
             steps {
                 script {
-                    docker_push("wanderlust-backend-beta", "${params.BACKEND_DOCKER_TAG}", "trainwithshubham")
-                    docker_push("wanderlust-frontend-beta", "${params.FRONTEND_DOCKER_TAG}", "trainwithshubham")
+                    docker_push("wanderlust-backend-beta", "${params.BACKEND_DOCKER_TAG}", "sajid0100")
+                    docker_push("wanderlust-frontend-beta", "${params.FRONTEND_DOCKER_TAG}", "sajid0100")
                 }
             }
         }
